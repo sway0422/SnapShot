@@ -40,6 +40,8 @@ public class Snapshot extends Activity {
 		//step2: timer()
 
 		//step3: startCamera()
+		/************************/
+		//initial commit
 	}
 
 	public void startCamera(){
