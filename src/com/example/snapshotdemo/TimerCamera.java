@@ -9,21 +9,19 @@ import android.content.Intent;
 
 
 import com.example.snapshotdemo.Snapshot;
+import com.example.snapshotdemo.Snapshot.CameraAdmin;
 
 public class TimerCamera {
 	private int intime;
 	Context context;
-
-	public TimerCamera(Context context, int intime) {
+    CameraAdmin cameraAdmin;
+	public TimerCamera(int intime) {
 		super();
 		this.intime = intime;
 	}
 	public void timer(final int timer){
 		 Thread t1 = new Thread(new Runnable(){
-
-				
-					  
-
+									 
 				@Override
 				public  void run() {
 					// TODO Auto-generated method stub
@@ -32,17 +30,7 @@ public class TimerCamera {
 					System.out.println("initial call run time = " + j);
 					for(; j>=0;j--){
 						System.out.println("call time left: " + j);
-					 /*ShutterCallback shutter = new ShutterCallback(){
-
-						 @Override
-						 public void onShutter() {
-							 // TODO Auto-generated method stub
-				
-						 }
-	    	
-					 };
-						  Camera.takePicture(shutter,null,null);
-                      */
+                      
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {

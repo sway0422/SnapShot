@@ -12,6 +12,7 @@ import android.widget.EditText;
 public class MainActivity extends Activity {
 	Button btn1;
 	EditText et1;
+	/*************************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

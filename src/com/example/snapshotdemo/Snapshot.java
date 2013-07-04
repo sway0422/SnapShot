@@ -1,6 +1,6 @@
 package com.example.snapshotdemo;
 
-import java.util.Timer;
+
 
 import com.example.snapshotdemo.TimerCamera;
 import android.annotation.SuppressLint;
@@ -15,84 +15,83 @@ import android.hardware.Camera.ShutterCallback;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class Snapshot extends Activity {
 	CameraAdmin cameraAdmin;
 	boolean isClicked = false;
-
+    int et6;
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.snapshot);
-		cameraAdmin = new CameraAdmin(this);
-		setContentView(cameraAdmin); 
+protected void onCreate(Bundle savedInstanceState) {
+	// TODO Auto-generated method stub
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.snapshot);
+	cameraAdmin = new CameraAdmin(this);
+	setContentView(cameraAdmin); 
+	String et5 = getIntent().getStringExtra("et3");
+	et6= Integer.parseInt(et5);	
+	//step1: receive int time from intent ->MainActivity
+	TimerCamera timercamera1= new TimerCamera(et6);
+	//step1: TimerCamera new
+	timercamera1.timer(et6);
+	Button btn1 =(Button)findViewById(R.id.button1);
+	//cameraAdmin = new CameraAdmin(Snapshot.this);
+	btn1.setOnClickListener(new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			//cameraAdmin
+		}
 		
+	});
+}
 
-		//Bundle et4= getIntent().getExtras();
-		//String et5= et4.toString();
-		String et5 = getIntent().getStringExtra("et3");
-		int et6= Integer.parseInt(et5);	
-		//step1: receive int time from intent ->MainActivity
-		TimerCamera timercamera1= new TimerCamera(this, et6);
-		//step1: TimerCamera new
-		timercamera1.timer(et6);
-		//step2: timer()
-
-		//step3: startCamera()
-		/************************/
-		//initial commit
-	}
-
-	public void startCamera(){
-		//tbd 
-		cameraAdmin = new CameraAdmin(this);
-	}
-/*	@Override
+public void startCamera(){
+	//tbd 
+	cameraAdmin = new CameraAdmin(this);
+}
+	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 	}
-	*/
-	public class CameraAdmin extends SurfaceView implements SurfaceHolder.Callback{
-
-		private SurfaceHolder holder;
-		private SurfaceView surfaceView;
-		private Camera camera;
-		private Camera.Parameters parameters;
-	    private boolean preview = false;
-//	    int defaultCameraId;
+	
+public class CameraAdmin extends SurfaceView implements SurfaceHolder.Callback{
+	private SurfaceHolder holder;
+	private SurfaceView surfaceView;
+	private Camera camera;
+	private Camera.Parameters parameters;
+	private boolean preview = false;
+//	int defaultCameraId;
 	    
-	    private ShutterCallback shutter = new ShutterCallback(){
-
-			@Override
-			public void onShutter() {
-				// TODO Auto-generated method stub
+	private ShutterCallback shutter = new ShutterCallback(){
+	@Override
+	    public void onShutter() {
+		// TODO Auto-generated method stub
 				
-			}
+		}
 	    	
-	    };
-	    private PictureCallback raw = new PictureCallback(){
-
-			@Override
-			public void onPictureTaken(byte[] data, Camera camera) {
-				// TODO Auto-generated method stub
+	};
+	private PictureCallback raw = new PictureCallback(){
+    @Override
+		public void onPictureTaken(byte[] data, Camera camera) {
+		// TODO Auto-generated method stub			
+		}
+	    	
+	};
+	private PictureCallback jpeg = new PictureCallback(){
+	@Override
+		public void onPictureTaken(byte[] data, Camera camera) {
+		// TODO Auto-generated method stub
 				
-			}
-	    	
-	    };
-	    private PictureCallback jpeg = new PictureCallback(){
+		}	    	
+    };
 
-			@Override
-			public void onPictureTaken(byte[] data, Camera camera) {
-				// TODO Auto-generated method stub
-				
-			}
-	    	
-	    };
-
-	    @SuppressWarnings("deprecation")
-		public CameraAdmin(Context context) {
+	@SuppressWarnings("deprecation")
+    public CameraAdmin(Context context) {
 			super(context);
 			// TODO Auto-generated constructor stub
 //			surfaceView = this;
@@ -100,8 +99,6 @@ public class Snapshot extends Activity {
 			holder = getHolder();
 			holder.addCallback(this);
 			holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-			
-
 	        }
 
 		@Override
@@ -117,7 +114,8 @@ public class Snapshot extends Activity {
 			}catch(Exception e){
 			e.printStackTrace();	
 			}
-			camera.takePicture(shutter, null, null);
+			
+			  camera.takePicture(shutter, null, null);
 			
 		}
 
@@ -132,18 +130,22 @@ public class Snapshot extends Activity {
 				Camera.getCameraInfo(i, cameraInfo);
 				if(cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK){
 					int defaultCameraId = i;
+					System.out.println("debug " + defaultCameraId);
 					try{
 					if(camera == null){
+						
 					camera = Camera.open(defaultCameraId);
 					System.out.println("back camera: "+ camera);
 					}	
 					}catch(Exception e){
 						e.printStackTrace();
 					}
-					
-					
-				}else if(cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT){
-					int defaultCameraId = i;
+							
+				}
+				else if(cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT){
+	
+				    int defaultCameraId = i;
+					System.out.println("debug " + defaultCameraId);
 					try{
 					if(camera == null){
 					camera = Camera.open(defaultCameraId);
@@ -154,16 +156,20 @@ public class Snapshot extends Activity {
 					}
 
 				}
+				
 			try{
 				camera.setPreviewDisplay(holder);
 				System.out.println("check preview");
 			}catch(Exception e){
 				e.printStackTrace();
+				if(camera != null)
+				{
 				camera.release();
 				camera = null;
+				}
 				System.out.println("check preview fails");
 			}
-			}
+		}
 
 		}
 
